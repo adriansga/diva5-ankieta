@@ -1,6 +1,6 @@
 // DIVA-5 ankieta — logika
-const SUPABASE_URL = "https://lwfzuwtkoankhbcpnwkm.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFtcmhrd2psYXJ6ZHB6cmFmcnNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyNDAwOTQsImV4cCI6MjA5NzgxNjA5NH0.yTVQuM-rMHZbGYF6Fk8LK_N_8S9eDbK_M6QGqU0Ntsg";
+const SUPABASE_URL = "https://wadiharahtmfvqjtjsjp.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndhZGloYXJhaHRtZnZxanRqc2pwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQxNDM5MDUsImV4cCI6MjEwOTcxOTkwNX0.MANZcv1tU9QMawz0T9d5984mAyhegvSw9DBserCaoac";
 const TABLE = "diva_odpowiedzi";
 
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
