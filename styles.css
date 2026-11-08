@@ -134,6 +134,9 @@ tr:hover td { background: #f4f8fb; }
 .modal-box label { display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
 .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
 .szczegoly h4 { margin: 12px 0 6px; color: #10314f; }
+.podsumowanie { margin: 4px 0 14px; padding-left: 20px; font-size: 14px; }
+.podsumowanie li { margin: 4px 0; }
+.kryt-cell { white-space: nowrap; font-size: 12.5px; }
 .mini { font-size: 13px; }
 .mini th, .mini td { padding: 6px 8px; }
 @media (max-width: 640px) {

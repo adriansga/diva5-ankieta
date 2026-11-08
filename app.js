@@ -160,6 +160,20 @@ async function wyslijAnkiete() {
 }
 
 // ---------- ADMIN ----------
+function podsumuj(o) {
+  const kryteria = o?.kryteria || {};
+  const suma = (lista, okres) => lista.filter((item) => kryteria[item.id]?.[okres] === "tak").length;
+  const a_d = suma(PYTANIA_CZESC1, "doroslosc");
+  const a_c = suma(PYTANIA_CZESC1, "dziecinstwo");
+  const hi_d = suma(PYTANIA_CZESC2, "doroslosc");
+  const hi_c = suma(PYTANIA_CZESC2, "dziecinstwo");
+  const krytA = a_d >= 5 && hi_d >= 5 && (a_c + hi_c) >= 3;
+  const krytB = o?.krytB === "tak";
+  const krytCD_d = o?.krytCD?.doroslosc === "tak";
+  const krytCD_c = o?.krytCD?.dziecinstwo === "tak";
+  return { a_d, a_c, hi_d, hi_c, krytA, krytB, krytCD_d, krytCD_c };
+}
+
 async function zaloguj() {
   const email = $("login-email").value.trim();
   const password = $("login-password").value;
@@ -185,7 +199,11 @@ async function pokazWyniki() {
   for (const row of data) {
     const tr = document.createElement("tr");
     const dataStr = row.created_at ? new Date(row.created_at).toLocaleString("pl-PL") : "—";
+    const p = podsumuj(row.odpowiedzi);
+    const tN = (v) => (v ? "Tak" : "Nie");
     tr.innerHTML = `<td>${dataStr}</td><td>${row.imie}</td><td>${row.nazwisko}</td><td>${row.plec || "—"}</td><td>${row.kod || "—"}</td>
+      <td>${p.a_d}/9</td><td>${p.a_c}/9</td><td>${p.hi_d}/9</td><td>${p.hi_c}/9</td>
+      <td class="kryt-cell">A: ${tN(p.krytA)} · B: ${tN(p.krytB)} · C/D: ${tN(p.krytCD_d)}/${tN(p.krytCD_c)}</td>
       <td><button class="btn-ghost" data-id="${row.id}" type="button">Podgląd</button></td>`;
     tbody.appendChild(tr);
   }
@@ -199,8 +217,18 @@ function pokazSzczegoly(id) {
   if (!row) return;
   $("szczegoly-tytul").textContent = `${row.imie} ${row.nazwisko} (${row.kod || "bez kodu"})`;
   const o = row.odpowiedzi;
+  const p = podsumuj(o);
+  const tN = (v) => (v ? "Tak" : "Nie");
   const wszystkie = [...PYTANIA_CZESC1, ...PYTANIA_CZESC2];
   let html = "<div class='szczegoly'>";
+  html += "<h4>Podsumowanie (liczone automatycznie)</h4>";
+  html += `<ul class='podsumowanie'>
+    <li>Objawy zaburzeń koncentracji uwagi (A): <strong>${p.a_d}/9</strong> (wiek dorosły), <strong>${p.a_c}/9</strong> (dzieciństwo)</li>
+    <li>Objawy nadpobudliwości i impulsywności (H/I): <strong>${p.hi_d}/9</strong> (wiek dorosły), <strong>${p.hi_c}/9</strong> (dzieciństwo)</li>
+    <li>Kryterium A wg DSM-5 (dorosły: A ≥ 5 i H/I ≥ 5; dziecko: ≥ 3 objawy z A lub H/I): <strong>${tN(p.krytA)}</strong></li>
+    <li>Kryterium B wg DSM-5 (objawy przez całe życie, pierwsze przed 12. r.ż.): <strong>${tN(p.krytB)}</strong></li>
+    <li>Kryteria C i D wg DSM-5 (istotne problemy w ≥ 2 obszarach życiowych): dorosłość <strong>${tN(p.krytCD_d)}</strong>, dzieciństwo <strong>${tN(p.krytCD_c)}</strong></li>
+  </ul>`;
   html += "<h4>Część 1 i 2 — kryteria</h4><table class='mini'><tr><th>Kryterium</th><th>Dorosłość</th><th>Dzieciństwo</th></tr>";
   for (const item of wszystkie) {
     const k = o.kryteria?.[item.id] || {};
@@ -223,8 +251,9 @@ function pokazSzczegoly(id) {
 }
 
 function eksportCSV() {
-  const wiersze = [["Data", "Imię", "Nazwisko", "Płeć", "Data urodzenia", "Kod", "Odpowiedzi (JSON)"]];
+  const wiersze = [["Data", "Imię", "Nazwisko", "Płeć", "Data urodzenia", "Kod", "Suma A dorosłość", "Suma A dzieciństwo", "Suma H/I dorosłość", "Suma H/I dzieciństwo", "Kryt. A", "Kryt. B", "Kryt. C/D dorosłość", "Kryt. C/D dzieciństwo", "Odpowiedzi (JSON)"]];
   for (const row of window._wyniki || []) {
+    const p = podsumuj(row.odpowiedzi);
     wiersze.push([
       row.created_at || "",
       row.imie,
@@ -232,6 +261,14 @@ function eksportCSV() {
       row.plec || "",
       row.data_urodzenia || "",
       row.kod || "",
+      `${p.a_d}/9`,
+      `${p.a_c}/9`,
+      `${p.hi_d}/9`,
+      `${p.hi_c}/9`,
+      p.krytA ? "Tak" : "Nie",
+      p.krytB ? "Tak" : "Nie",
+      p.krytCD_d ? "Tak" : "Nie",
+      p.krytCD_c ? "Tak" : "Nie",
       JSON.stringify(row.odpowiedzi),
     ]);
   }
