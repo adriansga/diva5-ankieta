@@ -7,13 +7,17 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const $ = (id) => document.getElementById(id);
 
+const bezId = (t) => t.replace(/^(A\d+|H\/I\s*\d+)\s*-\s*/, "");
+
+const widocznyId = (id) => (id.startsWith("HI") ? "H/I " + id.slice(2) : id);
+
 function budujKryterium(container, item) {
   const div = document.createElement("div");
   div.className = "kryterium";
   div.innerHTML = `
     <div class="kryterium-naglowek">
-      <strong>${item.id}</strong>
-      <span>${item.tytul}</span>
+      <strong>${widocznyId(item.id)}</strong>
+      <span>${bezId(item.tytul)}</span>
     </div>
     <p class="pytanie">${item.pytanie}</p>
     <details class="przyklady">
@@ -232,7 +236,7 @@ function pokazSzczegoly(id) {
   html += "<h4>Część 1 i 2 — kryteria</h4><table class='mini'><tr><th>Kryterium</th><th>Dorosłość</th><th>Dzieciństwo</th></tr>";
   for (const item of wszystkie) {
     const k = o.kryteria?.[item.id] || {};
-    html += `<tr><td><strong>${item.id}</strong> ${item.tytul}</td><td>${k.doroslosc || "—"}</td><td>${k.dziecinstwo || "—"}</td></tr>`;
+    html += `<tr><td><strong>${widocznyId(item.id)}</strong> ${bezId(item.tytul)}</td><td>${k.doroslosc || "—"}</td><td>${k.dziecinstwo || "—"}</td></tr>`;
   }
   html += "</table>";
   html += "<h4>Część 3</h4>";
