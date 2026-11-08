@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>DIVA-5 — ankieta</title>
+<link rel="stylesheet" href="styles.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="pytania.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-title">DIVA-5 <span>wywiad diagnostyczny ADHD u dorosłych</span></div>
+  <button id="btn-admin" class="btn-admin" type="button">Panel terapeuty</button>
+</header>
+
+<main id="view-ankieta" class="wrap">
+  <div class="intro">
+    <p>Proszę odpowiedzieć na poniższe pytania. Objawy w wieku dorosłym muszą utrzymywać się przez co najmniej 6 miesięcy. Objawy w dzieciństwie odnoszą się do wieku między 5. a 12. rokiem życia. Warunkiem uznania określonej cechy za symptom ADHD jest jej przewlekły i uporczywy charakter.</p>
+  </div>
+
+  <section class="card">
+    <h2>Dane osoby</h2>
+    <div class="grid2">
+      <label>Imię <span class="req">*</span><input id="imie" type="text" required/></label>
+      <label>Nazwisko <span class="req">*</span><input id="nazwisko" type="text" required/></label>
+      <label>Data urodzenia<input id="data_urodzenia" type="date"/></label>
+      <label>Płeć
+        <select id="plec"><option value="">—</option><option value="K">Kobieta</option><option value="M">Mężczyzna</option></select>
+      </label>
+      <label>Kod pacjenta (opcjonalnie)<input id="kod" type="text"/></label>
+    </div>
+  </section>
+
+  <section id="sekcja-czesc1" class="section-block">
+    <h2>Część 1. Objawy zaburzeń koncentracji uwagi <small>(kryterium A1 wg DSM-5)</small></h2>
+    <div id="czesc1"></div>
+  </section>
+
+  <section id="sekcja-czesc2" class="section-block">
+    <h2>Część 2. Objawy nadpobudliwości psychoruchowej i nadmiernej impulsywności <small>(kryterium A2 wg DSM-5)</small></h2>
+    <div id="czesc2"></div>
+  </section>
+
+  <section id="sekcja-czesc3" class="section-block">
+    <h2>Część 3. Upośledzenie funkcjonowania w następstwie objawów <small>(kryteria B, C i D wg DSM-5)</small></h2>
+    <div id="czesc3"></div>
+  </section>
+
+  <section class="card final">
+    <p id="msg-wysylka" class="msg" hidden></p>
+    <button id="btn-wyslij" class="btn-submit" type="button">Wyślij ankietę</button>
+  </section>
+</main>
+
+<main id="view-admin" class="wrap" hidden>
+  <div class="admin-head">
+    <h2>Wyniki ankiet</h2>
+    <div>
+      <button id="btn-csv" class="btn-admin" type="button">Eksport CSV</button>
+      <button id="btn-logout" class="btn-admin" type="button">Wyloguj</button>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table id="tabela-wynikow">
+      <thead><tr><th>Data</th><th>Imię</th><th>Nazwisko</th><th>Płeć</th><th>Kod</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+  <p id="admin-info" class="msg"></p>
+</main>
+
+<div id="modal-login" class="modal" hidden>
+  <div class="modal-box">
+    <h3>Logowanie terapeuty</h3>
+    <label>E-mail<input id="login-email" type="email" value="marta@diva5.local"/></label>
+    <label>Hasło<input id="login-password" type="password"/></label>
+    <p id="login-msg" class="msg"></p>
+    <div class="modal-actions">
+      <button id="btn-login-ok" class="btn-submit" type="button">Zaloguj</button>
+      <button id="btn-login-anuluj" class="btn-ghost" type="button">Anuluj</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-szczegoly" class="modal" hidden>
+  <div class="modal-box wide">
+    <h3 id="szczegoly-tytul"></h3>
+    <div id="szczegoly-tresc"></div>
+    <div class="modal-actions">
+      <button id="btn-szczegoly-zamknij" class="btn-ghost" type="button">Zamknij</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
